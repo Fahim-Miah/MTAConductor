@@ -383,14 +383,14 @@ function renderQuizQuestion() {
   // Choices
   const choicesEl = document.getElementById('choices');
   choicesEl.innerHTML = q.choices.map((c, i) => {
-    let cls = 'choice-btn w-full block';
+    let cls = 'choice-btn w-full block border-2 border-gray-200 rounded-xl p-3 sm:p-4 text-left cursor-pointer bg-white text-sm sm:text-base';
     if (quizState.submitted) {
       if (i === q.correct) cls += ' correct';
       else if (i === quizState.answers[q.id]?.selected && !quizState.answers[q.id]?.correct) cls += ' wrong';
     } else if (quizState.selectedChoice === i) {
       cls += ' selected';
     }
-    return `<button class="${cls}" ${quizState.submitted ? 'disabled' : ''} onclick="selectChoice(${i})"><span class="font-semibold mr-2">${String.fromCharCode(65 + i)}.</span> ${c}</button>`;
+    return `<button class="${cls}" ${quizState.submitted ? 'disabled' : ''} onclick="selectChoice(${i})"><span class="font-semibold mr-2 text-[#0039A6]">${String.fromCharCode(65 + i)}.</span> ${c}</button>`;
   }).join('');
 
   // Feedback
@@ -580,7 +580,7 @@ function renderReview() {
       ${notes[q.id] ? `<div class="mb-3 bg-amber-50 border-l-4 border-amber-400 p-2 rounded-r-lg"><p class="text-xs text-amber-800">📝 ${notes[q.id].text}</p></div>` : ''}
       ${content}
       <p class="font-semibold text-gray-800 mb-3">${q.q}</p>
-      <div class="space-y-2">${q.choices.map((c, i) => `<div class="px-3 py-2 rounded-lg text-sm ${i === q.correct ? 'bg-green-50 border border-green-300 text-green-800' : 'bg-gray-50 border border-gray-200'}"><span class="font-semibold mr-1">${String.fromCharCode(65 + i)}.</span> ${c}${i === q.correct ? '<span class="ml-2 text-green-600">✓</span>' : ''}</div>`).join('')}</div>
+      <div class="space-y-3">${q.choices.map((c, i) => `<div class="border-2 rounded-xl p-3 sm:p-4 text-sm sm:text-base ${i === q.correct ? 'bg-green-50 border-green-500 text-green-800 font-medium' : 'bg-white border-gray-200 text-gray-700'}"><span class="font-semibold mr-2 text-[#0039A6]">${String.fromCharCode(65 + i)}.</span>${c}${i === q.correct ? '<span class="ml-2 text-green-600">✓</span>' : ''}</div>`).join('')}</div>
       <p class="mt-3 text-sm text-gray-600 italic"><strong>Explanation:</strong> ${q.explanation}</p>
     </div>`;
   }).join('');
