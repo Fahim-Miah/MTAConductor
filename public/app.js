@@ -498,7 +498,14 @@ let reviewFilter = 'All';
 
 // ============ INIT ============
 function init() {
-  CATEGORIES.forEach(c => c.count = QUESTIONS.filter(q => q.category === c.name || q.topics.includes(c.name)).length);
+  CATEGORIES.forEach(c => {
+    if (c.name === 'Official NYCTA Exam') {
+      // Special case: Official NYCTA Exam questions are those with IDs 101-201
+      c.count = QUESTIONS.filter(q => q.id >= 101 && q.id <= 201).length;
+    } else {
+      c.count = QUESTIONS.filter(q => q.category === c.name).length;
+    }
+  });
   
   // Load saved data
   const savedNotes = localStorage.getItem('mta_notes');
@@ -546,7 +553,13 @@ function renderHome() {
 
   const grid = document.getElementById('category-grid');
   grid.innerHTML = CATEGORIES.map(cat => {
-    const catQs = QUESTIONS.filter(q => q.category === cat.name || q.topics.includes(cat.name));
+    let catQs;
+    if (cat.name === 'Official NYCTA Exam') {
+      // Special case: Official NYCTA Exam questions are those with IDs 101-201
+      catQs = QUESTIONS.filter(q => q.id >= 101 && q.id <= 201);
+    } else {
+      catQs = QUESTIONS.filter(q => q.category === cat.name);
+    }
     const attempted = catQs.filter(q => stats.categoryStats[cat.name]?.attempts > 0).length;
     const correctCount = catQs.filter(q => {
       const cs = stats.categoryStats[cat.name];
@@ -576,8 +589,11 @@ function startQuiz(category, count) {
   if (category === 'mixed') {
     filtered = shuffle(QUESTIONS);
     if (count > 0) filtered = filtered.slice(0, count);
+  } else if (category === 'Official NYCTA Exam') {
+    // Special case: Official NYCTA Exam questions are those with IDs 101-201
+    filtered = shuffle(QUESTIONS.filter(q => q.id >= 101 && q.id <= 201));
   } else {
-    filtered = shuffle(QUESTIONS.filter(q => q.category === category || q.topics.includes(category)));
+    filtered = shuffle(QUESTIONS.filter(q => q.category === category));
   }
   lastQuizConfig = { category, count };
   quizState = { questions: filtered, currentIndex: 0, answers: {}, selectedChoice: null, submitted: false, startTime: Date.now(), config: { category, count } };
@@ -712,13 +728,9 @@ function submitAnswer() {
   stats.totalAttempts++;
   if (isCorrect) { stats.correctAnswers++; stats.currentStreak++; if (stats.currentStreak > stats.bestStreak) stats.bestStreak = stats.currentStreak; }
   else stats.currentStreak = 0;
-  // Record stats for primary category and all topics
-  const allCats = [q.category, ...q.topics.filter(t => t !== q.category)];
-  allCats.forEach(cat => {
-    if (!stats.categoryStats[cat]) stats.categoryStats[cat] = { attempts: 0, correct: 0 };
-    stats.categoryStats[cat].attempts++;
-    if (isCorrect) stats.categoryStats[cat].correct++;
-  });
+  if (!stats.categoryStats[q.category]) stats.categoryStats[q.category] = { attempts: 0, correct: 0 };
+  stats.categoryStats[q.category].attempts++;
+  if (isCorrect) stats.categoryStats[q.category].correct++;
   saveStats();
   renderQuizQuestion();
 }
@@ -760,13 +772,19 @@ function toggleCustomCat(name) { if (customQuizSelected.includes(name)) customQu
 function renderCustomQuizModal() {
   const el = document.getElementById('custom-quiz-categories');
   el.innerHTML = CATEGORIES.map(c => `<div class="cat-checkbox-card mta-card rounded-xl p-3 flex items-center gap-3 ${customQuizSelected.includes(c.name) ? 'selected' : ''}" onclick="toggleCustomCat('${c.name}')"><div class="cat-check"></div><span class="text-xl">${c.icon}</span><div class="flex-1"><p class="font-semibold text-sm text-gray-800">${c.name}</p><p class="text-xs text-gray-500">${c.count} questions</p></div></div>`).join('');
-  const totalQs = QUESTIONS.filter(q => customQuizSelected.some(c => q.category === c || q.topics.includes(c))).length;
+  const totalQs = QUESTIONS.filter(q => {
+    if (customQuizSelected.includes('Official NYCTA Exam') && q.id >= 101 && q.id <= 201) return true;
+    return customQuizSelected.includes(q.category);
+  }).length;
   document.getElementById('custom-quiz-total').textContent = totalQs;
   document.getElementById('custom-quiz-cats').textContent = customQuizSelected.length;
   document.getElementById('start-custom-quiz-btn').disabled = customQuizSelected.length === 0;
 }
 function startCustomQuiz() {
-  const filtered = shuffle(QUESTIONS.filter(q => customQuizSelected.some(c => q.category === c || q.topics.includes(c))));
+  const filtered = shuffle(QUESTIONS.filter(q => {
+    if (customQuizSelected.includes('Official NYCTA Exam') && q.id >= 101 && q.id <= 201) return true;
+    return customQuizSelected.includes(q.category);
+  }));
   if (filtered.length === 0) return;
   closeCustomQuizModal();
   lastQuizConfig = { category: customQuizSelected.join(', '), count: filtered.length };
@@ -838,7 +856,14 @@ function renderReview() {
   filtersEl.innerHTML = `<button class="category-chip px-3 py-1.5 rounded-full text-sm font-medium ${reviewFilter === 'All' ? 'active' : ''}" onclick="setReviewFilter('All')">All</button>` + CATEGORIES.map(c => `<button class="category-chip px-3 py-1.5 rounded-full text-sm font-medium ${reviewFilter === c.name ? 'active' : ''}" onclick="setReviewFilter('${c.name}')">${c.icon} ${c.name}</button>`).join('');
 
   const listEl = document.getElementById('review-list');
-  const filtered = QUESTIONS.filter(q => reviewFilter === 'All' || q.category === reviewFilter || q.topics.includes(reviewFilter));
+  const filtered = QUESTIONS.filter(q => {
+    if (reviewFilter === 'All') return true;
+    if (reviewFilter === 'Official NYCTA Exam') {
+      // Special case: Official NYCTA Exam questions are those with IDs 101-201
+      return q.id >= 101 && q.id <= 201;
+    }
+    return q.category === reviewFilter;
+  });
   listEl.innerHTML = filtered.map(q => {
     let content = '';
     if (q.passageKey) content += `<span class="shared-passage-indicator">📄 Shared Passage</span>`;
