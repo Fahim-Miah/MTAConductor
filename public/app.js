@@ -865,7 +865,151 @@ function finishQuiz() {
   document.getElementById('r-score').textContent = `${correct}/${total}`;
   document.getElementById('r-accuracy').textContent = pct + '%';
   document.getElementById('r-time').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+  
+  // Generate practice recommendations
+  const recommendations = generateRecommendations(quizState);
+  const recElement = document.getElementById('r-recommendations');
+  if (recElement) {
+    recElement.innerHTML = recommendations;
+  }
+  
   document.getElementById('results-modal').classList.remove('hidden');
+}
+
+function generateRecommendations(quizState) {
+  const categoryPerformance = {};
+  
+  // Analyze performance by category
+  quizState.questions.forEach(q => {
+    const answer = quizState.answers[q.id];
+    if (!categoryPerformance[q.category]) {
+      categoryPerformance[q.category] = { correct: 0, total: 0 };
+    }
+    categoryPerformance[q.category].total++;
+    if (answer && answer.correct) {
+      categoryPerformance[q.category].correct++;
+    }
+  });
+  
+  // Find weak areas (categories with < 70% accuracy)
+  const weakAreas = [];
+  const strongAreas = [];
+  
+  Object.entries(categoryPerformance).forEach(([category, data]) => {
+    const accuracy = (data.correct / data.total) * 100;
+    if (accuracy < 70 && data.total >= 2) {
+      weakAreas.push({ category, accuracy: Math.round(accuracy), total: data.total });
+    } else if (accuracy >= 80 && data.total >= 2) {
+      strongAreas.push({ category, accuracy: Math.round(accuracy), total: data.total });
+    }
+  });
+  
+  // Sort weak areas by accuracy (worst first)
+  weakAreas.sort((a, b) => a.accuracy - b.accuracy);
+  
+  let html = '<div style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9;">';
+  html += '<h3 style="margin: 0 0 10px 0; color: #0369a1; font-size: 18px;">💡 Practice Recommendations</h3>';
+  
+  if (weakAreas.length > 0) {
+    html += '<div style="margin-bottom: 15px;">';
+    html += '<p style="margin: 0 0 8px 0; font-weight: 600; color: #dc2626;">📚 Focus Areas (needs improvement):</p>';
+    html += '<ul style="margin: 0; padding-left: 20px; color: #334155;">';
+    weakAreas.slice(0, 3).forEach(area => {
+      html += `<li style="margin-bottom: 5px;"><strong>${area.category}</strong> - ${area.accuracy}% accuracy (${area.total} questions)</li>`;
+    });
+    html += '</ul></div>';
+    
+    // Add specific advice based on weak areas
+    html += '<div style="margin-top: 15px; padding: 12px; background: white; border-radius: 6px;">';
+    html += '<p style="margin: 0 0 8px 0; font-weight: 600; color: #0369a1;">🎯 Study Tips:</p>';
+    html += '<ul style="margin: 0; padding-left: 20px; color: #475569; font-size: 14px;">';
+    
+    weakAreas.slice(0, 2).forEach(area => {
+      const tips = getCategoryTips(area.category);
+      tips.forEach(tip => {
+        html += `<li style="margin-bottom: 5px;">${tip}</li>`;
+      });
+    });
+    
+    html += '</ul></div>';
+  } else {
+    html += '<p style="margin: 0; color: #059669; font-weight: 600;">✅ Great job! You\'re performing well across all categories.</p>';
+  }
+  
+  if (strongAreas.length > 0) {
+    html += '<div style="margin-top: 15px;">';
+    html += '<p style="margin: 0 0 8px 0; font-weight: 600; color: #059669;">⭐ Strong Areas:</p>';
+    html += '<ul style="margin: 0; padding-left: 20px; color: #334155;">';
+    strongAreas.slice(0, 3).forEach(area => {
+      html += `<li style="margin-bottom: 5px;"><strong>${area.category}</strong> - ${area.accuracy}% accuracy</li>`;
+    });
+    html += '</ul></div>';
+  }
+  
+  html += '</div>';
+  return html;
+}
+
+function getCategoryTips(category) {
+  const tips = {
+    'Signal Indications': [
+      'Review signal aspect meanings and their corresponding actions',
+      'Practice identifying signal colors and their implications',
+      'Study the difference between absolute and permissive signals'
+    ],
+    'Operating Rules': [
+      'Review track warrant and train order procedures',
+      'Study speed restrictions and when they apply',
+      'Practice right-of-way rules and train priorities'
+    ],
+    'Safety & Emergency': [
+      'Review emergency procedures for different scenarios',
+      'Study evacuation protocols and passenger safety',
+      'Practice third rail safety and electrical hazards'
+    ],
+    'Equipment': [
+      'Review train car components and their functions',
+      'Study brake systems and their operation',
+      'Practice identifying equipment failures and responses'
+    ],
+    'Communication': [
+      'Review radio communication protocols',
+      'Study proper announcement procedures',
+      'Practice clear and concise communication techniques'
+    ],
+    'Route Knowledge': [
+      'Study track layouts and interlockings',
+      'Review yard limits and main line operations',
+      'Practice identifying key locations and landmarks'
+    ],
+    'General Knowledge': [
+      'Review MTA history and organizational structure',
+      'Study fare policies and passenger regulations',
+      'Practice NYC geography and transit connections'
+    ],
+    'Table Interpretation': [
+      'Practice reading and interpreting timetables',
+      'Study speed tables and restriction charts',
+      'Review equipment specifications and capacity tables'
+    ],
+    'Locations': [
+      'Study NYC boroughs and their boundaries',
+      'Review major landmarks and their locations',
+      'Practice identifying stations and their connections'
+    ],
+    'Time & Schedule': [
+      'Practice converting between 12-hour and 24-hour time',
+      'Study headway calculations and scheduling',
+      'Review trip timing and layover procedures'
+    ],
+    'Official NYCTA Exam': [
+      'Review past exam questions and explanations',
+      'Study the specific topics emphasized in official exams',
+      'Practice time management during practice tests'
+    ]
+  };
+  
+  return tips[category] || ['Review the study materials for this category', 'Practice more questions in this area', 'Focus on understanding the core concepts'];
 }
 function closeResults() { document.getElementById('results-modal').classList.add('hidden'); }
 
