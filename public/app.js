@@ -607,6 +607,7 @@ let stats = { totalAttempts: 0, correctAnswers: 0, currentStreak: 0, bestStreak:
 let noteEditorQId = null;
 let customQuizSelected = [];
 let reviewFilter = 'All';
+let reviewQuizQuestions = null; // Array of question IDs from current quiz, null means show all
 
 // ============ INIT ============
 function init() {
@@ -640,14 +641,19 @@ function saveNotes() { localStorage.setItem('mta_notes', JSON.stringify(notes));
 function saveStats() { localStorage.setItem('mta_stats', JSON.stringify(stats)); }
 
 // ============ TAB SWITCHING ============
-function switchTab(tab) {
+function switchTab(tab, keepQuizReview = false) {
   currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
   document.querySelector(`[data-tab="${tab}"]`).classList.add('tab-active');
   document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
   document.getElementById(`view-${tab}`).classList.remove('hidden');
   if (tab === 'home') renderHome();
-  if (tab === 'review') renderReview();
+  if (tab === 'review') {
+    if (!keepQuizReview) {
+      reviewQuizQuestions = null; // Clear quiz-specific filter when switching tabs normally
+    }
+    renderReview();
+  }
   if (tab === 'notes') renderNotesView();
   if (tab === 'stats') renderStats();
 }
@@ -1096,8 +1102,15 @@ function deleteNoteById(qId) { delete notes[qId]; saveNotes(); renderNotesView()
 // ============ REVIEW ============
 function renderReview() {
   const navGrid = document.getElementById('review-nav-grid');
-  document.getElementById('review-nav-count').textContent = `(${QUESTIONS.length})`;
-  navGrid.innerHTML = QUESTIONS.map((q, i) => {
+  
+  // Determine which questions to show
+  let questionsToShow = QUESTIONS;
+  if (reviewQuizQuestions && reviewQuizQuestions.length > 0) {
+    questionsToShow = QUESTIONS.filter(q => reviewQuizQuestions.includes(q.id));
+  }
+  
+  document.getElementById('review-nav-count').textContent = `(${questionsToShow.length})`;
+  navGrid.innerHTML = questionsToShow.map((q, i) => {
     const hasNote = notes[q.id];
     let cls = 'q-nav-btn';
     if (hasNote) cls += ' has-note';
@@ -1106,10 +1119,16 @@ function renderReview() {
   }).join('');
 
   const filtersEl = document.getElementById('review-filters');
-  filtersEl.innerHTML = `<button class="category-chip px-3 py-1.5 rounded-full text-sm font-medium ${reviewFilter === 'All' ? 'active' : ''}" onclick="setReviewFilter('All')">All</button>` + CATEGORIES.map(c => `<button class="category-chip px-3 py-1.5 rounded-full text-sm font-medium ${reviewFilter === c.name ? 'active' : ''}" onclick="setReviewFilter('${c.name}')">${c.icon} ${c.name}</button>`).join('');
+  // Only show category filters if not in quiz-specific review mode
+  if (reviewQuizQuestions && reviewQuizQuestions.length > 0) {
+    filtersEl.innerHTML = `<button class="category-chip px-3 py-1.5 rounded-full text-sm font-medium active" onclick="clearQuizReview()">📋 Current Quiz (${questionsToShow.length} questions)</button>`;
+  } else {
+    filtersEl.innerHTML = `<button class="category-chip px-3 py-1.5 rounded-full text-sm font-medium ${reviewFilter === 'All' ? 'active' : ''}" onclick="setReviewFilter('All')">All</button>` + CATEGORIES.map(c => `<button class="category-chip px-3 py-1.5 rounded-full text-sm font-medium ${reviewFilter === c.name ? 'active' : ''}" onclick="setReviewFilter('${c.name}')">${c.icon} ${c.name}</button>`).join('');
+  }
 
   const listEl = document.getElementById('review-list');
-  const filtered = QUESTIONS.filter(q => {
+  const filtered = questionsToShow.filter(q => {
+    if (reviewQuizQuestions && reviewQuizQuestions.length > 0) return true; // Already filtered above
     if (reviewFilter === 'All') return true;
     if (reviewFilter === 'Official NYCTA Exam') {
       return q.id >= 1 && q.id <= 101;
@@ -1134,9 +1153,35 @@ function renderReview() {
     </div>`;
   }).join('');
 }
-function setReviewFilter(cat) { reviewFilter = cat; renderReview(); }
+function setReviewFilter(cat) { 
+  reviewFilter = cat; 
+  reviewQuizQuestions = null; // Clear quiz-specific filter when using category filter
+  renderReview(); 
+}
 function scrollToReviewQ(id) { const el = document.getElementById('review-q-' + id); if (el) el.scrollIntoView({ behavior: 'smooth' }); }
-function reviewJumpTo() { const val = parseInt(document.getElementById('review-jump-input').value); if (val && QUESTIONS[val - 1]) scrollToReviewQ(QUESTIONS[val - 1].id); }
+function reviewJumpTo() { 
+  const val = parseInt(document.getElementById('review-jump-input').value); 
+  let questionsToSearch = reviewQuizQuestions && reviewQuizQuestions.length > 0 
+    ? QUESTIONS.filter(q => reviewQuizQuestions.includes(q.id))
+    : QUESTIONS;
+  if (val && questionsToSearch[val - 1]) scrollToReviewQ(questionsToSearch[val - 1].id); 
+}
+
+// Review only questions from current quiz
+function reviewCurrentQuiz() {
+  if (quizState && quizState.questions) {
+    reviewQuizQuestions = quizState.questions.map(q => q.id);
+  }
+  closeResults();
+  switchTab('review', true); // Keep quiz-specific filter
+}
+
+// Clear quiz-specific review filter and show all questions
+function clearQuizReview() {
+  reviewQuizQuestions = null;
+  reviewFilter = 'All';
+  renderReview();
+}
 
 // ============ STATS ============
 function renderStats() {
