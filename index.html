@@ -127,7 +127,7 @@
       <h3 class="text-2xl font-bold text-gray-800 mb-2">Start a Practice Quiz</h3>
       <p class="text-gray-600 mb-6">Pick a mode and begin studying immediately.</p>
       <div class="flex flex-wrap justify-center gap-3">
-        <button onclick="startQuiz('mixed', 10)" class="btn-primary px-6 py-3 rounded-xl font-semibold">Quick Quiz (10)</button>
+        <button onclick="startPracticeTest()" class="btn-primary px-6 py-3 rounded-xl font-semibold">📝 Practice Test (80 questions, 3 hours)</button>
         <button onclick="openCustomQuizModal()" class="btn-secondary px-6 py-3 rounded-xl font-semibold">🎯 Custom Quiz</button>
         <button onclick="startQuiz('mixed', 0)" class="btn-secondary px-6 py-3 rounded-xl font-semibold">All Questions</button>
         <button onclick="startQuiz('Official NYCTA Exam', 0)" class="btn-secondary px-6 py-3 rounded-xl font-semibold">📜 Official Exam Only (101)</button>
@@ -142,7 +142,7 @@
       <div class="mta-card rounded-2xl p-6 max-w-md mx-auto mb-6">
         <h3 class="font-bold text-gray-800 mb-4">Choose a Quiz Mode</h3>
         <div class="space-y-3">
-          <button onclick="startQuiz('mixed', 10)" class="w-full btn-primary px-5 py-3 rounded-xl font-semibold">Quick Quiz — 10 Questions</button>
+          <button onclick="startPracticeTest()" class="w-full btn-primary px-5 py-3 rounded-xl font-semibold">📝 Practice Test — 80 Questions (3 hours)</button>
           <button onclick="openCustomQuizModal()" class="w-full btn-secondary px-5 py-3 rounded-xl font-semibold">🎯 Custom Quiz — Pick Categories</button>
           <button onclick="startQuiz('mixed', 0)" class="w-full btn-secondary px-5 py-3 rounded-xl font-semibold">All Questions</button>
           <button onclick="startQuiz('Official NYCTA Exam', 0)" class="w-full btn-secondary px-5 py-3 rounded-xl font-semibold">📜 Official NYCTA Exam Only (101)</button>
@@ -153,10 +153,38 @@
         <div class="flex flex-wrap justify-center gap-2" id="quiz-category-pick"></div>
       </div>
     </div>
+    <div id="memorization-phase" class="hidden">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">📋 Table Memorization Phase</h2>
+          <p class="text-sm text-gray-500">Study the table below. You will answer 10 questions about it from memory.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="bg-yellow-50 border-2 border-yellow-400 rounded-xl px-4 py-2 text-center">
+            <p class="text-xs text-yellow-700 font-semibold">Time Remaining</p>
+            <p class="text-2xl font-bold text-yellow-800" id="memorization-timer">10:00</p>
+          </div>
+          <button onclick="skipMemorization()" class="btn-secondary px-4 py-2 rounded-xl text-sm font-semibold">✓ Done - Start Questions</button>
+          <button onclick="exitQuiz()" class="text-sm text-gray-600 hover:text-[#0039A6] px-3 py-2">← Exit</button>
+        </div>
+      </div>
+      <div class="mta-card rounded-2xl p-6 sm:p-8 mb-4">
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-r-lg">
+          <p class="text-sm text-blue-900"><strong>📖 Instructions:</strong> Study the table below carefully. You have 10 minutes to memorize the information. After the time is up (or when you click "Done"), the table will be hidden and you'll answer 10 questions from memory. Take your time and focus on the key details.</p>
+        </div>
+        <div id="memorization-table"></div>
+      </div>
+    </div>
     <div id="quiz-active" class="hidden">
       <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div><h2 class="text-2xl font-bold text-gray-800">Practice Quiz</h2><p class="text-sm text-gray-500" id="quiz-subtitle">Mixed • 10 questions</p></div>
-        <button onclick="exitQuiz()" class="text-sm text-gray-600 hover:text-[#0039A6] px-3 py-2">← Exit</button>
+        <div class="flex items-center gap-3">
+          <div id="quiz-timer" class="hidden bg-blue-50 border-2 border-blue-300 rounded-xl px-4 py-2 text-center">
+            <p class="text-xs text-blue-600 font-semibold">Time Remaining</p>
+            <p class="text-2xl font-bold text-blue-800" id="timer-display">3:00:00</p>
+          </div>
+          <button onclick="exitQuiz()" class="text-sm text-gray-600 hover:text-[#0039A6] px-3 py-2">← Exit</button>
+        </div>
       </div>
       <div class="mb-4">
         <div class="flex justify-between text-xs text-gray-500 mb-1"><span id="progress-label">Question 1 of 10</span><span id="progress-pct">0%</span></div>

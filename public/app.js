@@ -39,6 +39,177 @@ const CATEGORIES = [
   { name: "Official NYCTA Exam", icon: "📜", count: 101 },
 ];
 
+// ============ TABLE MEMORIZATION QUESTIONS ============
+// These 10 questions are based on a table that test takers memorize for 10 minutes
+const TABLE_MEMORIZATION_QUESTIONS = [
+  {
+    id: 'mem1',
+    category: 'Table Memorization',
+    topics: ['Table Memorization'],
+    q: 'According to the table, what is the maximum speed for a train traveling through a sharp curve in Zone C?',
+    choices: ['15 MPH', '20 MPH', '30 MPH', '10 MPH'],
+    correct: 0,
+    explanation: 'Zone C with sharp curve = 15 MPH maximum speed.'
+  },
+  {
+    id: 'mem2',
+    category: 'Table Memorization',
+    topics: ['Table Memorization'],
+    q: 'If a train departs from Station A at 8:15 AM and arrives at Station D at 9:45 AM, how long is the journey?',
+    choices: ['1 hour 15 minutes', '1 hour 30 minutes', '1 hour 45 minutes', '2 hours'],
+    correct: 1,
+    explanation: 'From 8:15 AM to 9:45 AM = 1 hour 30 minutes.'
+  },
+  {
+    id: 'mem3',
+    category: 'Table Memorization',
+    topics: ['Table Memorization'],
+    q: 'Based on the equipment specifications table, what is the total weight capacity of a 6-car train?',
+    choices: ['480 tons', '540 tons', '600 tons', '720 tons'],
+    correct: 2,
+    explanation: 'Each car has 100 ton capacity × 6 cars = 600 tons total.'
+  },
+  {
+    id: 'mem4',
+    category: 'Table Memorization',
+    topics: ['Table Memorization'],
+    q: 'According to the signal aspect table, what does a flashing yellow signal indicate?',
+    choices: ['Stop', 'Proceed at restricted speed', 'Advance approach - prepare to stop at second signal', 'Clear - proceed at authorized speed'],
+    correct: 2,
+    explanation: 'Flashing yellow = Advance approach, prepare to stop at the second signal.'
+  },
+  {
+    id: 'mem5',
+    category: 'Table Memorization',
+    topics: ['Table Memorization'],
+    q: 'If the schedule shows trains departing every 12 minutes during rush hour, how many trains depart in 2 hours?',
+    choices: ['8 trains', '10 trains', '12 trains', '15 trains'],
+    correct: 1,
+    explanation: '120 minutes ÷ 12 minutes per train = 10 trains.'
+  },
+  {
+    id: 'mem6',
+    category: 'Table Memorization',
+    topics: ['Table Memorization'],
+    q: 'According to the brake test procedures table, what is the minimum air pressure required before departure?',
+    choices: ['70 PSI', '80 PSI', '90 PSI', '100 PSI'],
+    correct: 2,
+    explanation: 'Yard departure check requires minimum 90 PSI.'
+  },
+  {
+    id: 'mem7',
+    category: 'Table Memorization',
+    topics: ['Table Memorization'],
+    q: 'Based on the track speed limits table, what is the maximum speed for a straight track in Zone A?',
+    choices: ['45 MPH', '50 MPH', '55 MPH', '60 MPH'],
+    correct: 2,
+    explanation: 'Zone A straight track = 55 MPH maximum.'
+  },
+  {
+    id: 'mem8',
+    category: 'Table Memorization',
+    topics: ['Table Memorization'],
+    q: 'If a train must stop within 600 feet at 30 MPH, approximately how far must it stop at 15 MPH?',
+    choices: ['150 feet', '300 feet', '450 feet', '600 feet'],
+    correct: 1,
+    explanation: 'Stopping distance is proportional to speed squared, so half speed = quarter distance = 300 feet.'
+  },
+  {
+    id: 'mem9',
+    category: 'Table Memorization',
+    topics: ['Table Memorization'],
+    q: 'According to the shift schedule table, if a conductor starts at 06:00, when is their meal break?',
+    choices: ['08:00 - 09:00', '10:00 - 11:00', '12:00 - 13:00', '14:00 - 15:00'],
+    correct: 1,
+    explanation: 'Shift starting at 06:00 has meal break window 10:00 - 11:00.'
+  },
+  {
+    id: 'mem10',
+    category: 'Table Memorization',
+    topics: ['Table Memorization'],
+    q: 'Based on the defect codes table, what action is required for a D-4 defect?',
+    choices: ['Report at end of run', 'Take car out of service at terminal', 'Immediate inspection', 'Stop immediately, do not move'],
+    correct: 3,
+    explanation: 'D-4 (Third Rail Shoe Missing) is critical - stop immediately, do not move.'
+  }
+];
+
+// The table that test takers memorize
+const MEMORIZATION_TABLE = {
+  caption: 'Table: MTA Operating Reference Data',
+  headers: ['Category', 'Parameter', 'Value', 'Notes'],
+  rows: [
+    ['Speed Limits', 'Zone A - Straight Track', '55 MPH', 'Maximum authorized speed'],
+    ['Speed Limits', 'Zone A - Moderate Curve', '35 MPH', 'Reduce speed for curves'],
+    ['Speed Limits', 'Zone A - Sharp Curve', '15 MPH', 'Significant speed reduction'],
+    ['Speed Limits', 'Zone B - Straight Track', '55 MPH', 'Maximum authorized speed'],
+    ['Speed Limits', 'Zone B - Sharp Curve', '20 MPH', 'Moderate reduction'],
+    ['Speed Limits', 'Zone C - Straight Track', '50 MPH', 'Lower maximum speed'],
+    ['Speed Limits', 'Zone C - Sharp Curve', '15 MPH', 'Significant reduction'],
+    ['Signal Aspects', 'Green', 'Clear', 'Proceed at authorized speed'],
+    ['Signal Aspects', 'Yellow', 'Approach', 'Prepare to stop at next signal'],
+    ['Signal Aspects', 'Red', 'Stop', 'Stop and do not proceed'],
+    ['Signal Aspects', 'Flashing Yellow', 'Advance Approach', 'Prepare to stop at second signal'],
+    ['Signal Aspects', 'Red over Yellow', 'Restricting', 'Proceed at restricted speed (max 15 MPH)'],
+    ['Brake Tests', 'Initial Application', '90 PSI min', '3 PSI/min max leakage'],
+    ['Brake Tests', 'Full Service', '90 PSI min', '3 PSI/min max leakage'],
+    ['Brake Tests', 'Yard Departure Check', '90 PSI min', '2 PSI/min max leakage'],
+    ['Equipment', 'R160 Car Weight Capacity', '100 tons per car', 'Maximum load'],
+    ['Equipment', 'Standard Car Length', '51 feet', 'R142, R160, R179, R211'],
+    ['Equipment', 'R46 Car Length', '75 feet', 'Longer cars'],
+    ['Schedule', 'Rush Hour Headway', '12 minutes', 'Peak service frequency'],
+    ['Schedule', 'Off-Peak Headway', '20 minutes', 'Reduced service'],
+    ['Schedule', 'Sample Journey A to D', '1 hour 30 minutes', '8:15 AM to 9:45 AM'],
+    ['Shifts', '06:00 Start - Meal Break', '10:00 - 11:00', '4 hours into shift'],
+    ['Shifts', '14:00 Start - Meal Break', '18:00 - 19:00', '4 hours into shift'],
+    ['Defect Codes', 'D-1 Minor Interior Damage', 'Report at end of run', 'Low severity'],
+    ['Defect Codes', 'D-2 Door Sensor Fault', 'Take out at terminal', 'Medium severity'],
+    ['Defect Codes', 'D-3 Brake Shoe Wear', 'Immediate inspection', 'High severity'],
+    ['Defect Codes', 'D-4 Third Rail Shoe Missing', 'Stop immediately', 'Critical severity'],
+    ['Stopping Distance', '30 MPH', '600 feet', 'Emergency stop distance'],
+    ['Stopping Distance', '15 MPH', '300 feet', 'Quarter of 30 MPH distance'],
+    ['Weather', 'Fog < 100 ft visibility', 'Restricted Speed (15 MPH)', 'Sound horn frequently']
+  ]
+};
+
+// ============ HELPER FUNCTIONS ============
+function shuffleArray(array) {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function shuffleQuestionChoices(question) {
+  // Create array of indices [0, 1, 2, 3]
+  const indices = [0, 1, 2, 3];
+  const shuffledIndices = shuffleArray(indices);
+  
+  // Create new choices array based on shuffled indices
+  const newChoices = shuffledIndices.map(i => question.choices[i]);
+  
+  // Find new correct index
+  const newCorrect = shuffledIndices.indexOf(question.correct);
+  
+  return {
+    ...question,
+    choices: newChoices,
+    correct: newCorrect
+  };
+}
+
+// Randomize answer choices for specific categories to avoid pattern of correct answers being mostly B
+function randomizeCategoryChoices(questions, categories) {
+  return questions.map(q => {
+    if (categories.includes(q.category)) {
+      return shuffleQuestionChoices(q);
+    }
+    return q;
+  });
+}
+
 // ============ QUESTIONS ============
 // Official NYCTA Exam questions (IDs 1-101)
 const OFFICIAL_NYCTA_QUESTIONS = [
@@ -593,10 +764,14 @@ const OTHER_QUESTIONS = [
 
 // Combine Official NYCTA Exam questions (1-101) with other questions (102+)
 // Re-number all questions with correct IDs
-const QUESTIONS = [
+// Then randomize answer choices for Communication, General Knowledge, and Safety & Emergency
+const rawQuestions = [
   ...OFFICIAL_NYCTA_QUESTIONS.map((q, i) => ({ ...q, id: i + 1 })),
   ...OTHER_QUESTIONS.map((q, i) => ({ ...q, id: i + 102 }))
 ];
+
+// Randomize answer choices for these categories to avoid pattern of correct answers being mostly B
+const QUESTIONS = randomizeCategoryChoices(rawQuestions, ['Communication', 'General Knowledge', 'Safety & Emergency']);
 
 // ============ STATE ============
 let currentTab = 'home';
@@ -718,7 +893,175 @@ function startQuiz(category, count) {
   renderQuizQuestion();
 }
 
-function exitQuiz() { quizState = null; switchTab('home'); }
+function startPracticeTest() {
+  // Start with table memorization phase
+  startTableMemorizationPhase();
+}
+
+function startTableMemorizationPhase() {
+  // Show the table for memorization
+  const memorizationPhase = document.getElementById('memorization-phase');
+  const quizActive = document.getElementById('quiz-active');
+  const quizEmpty = document.getElementById('quiz-empty');
+  
+  quizEmpty.classList.add('hidden');
+  quizActive.classList.add('hidden');
+  memorizationPhase.classList.remove('hidden');
+  
+  // Display the table
+  const tableContainer = document.getElementById('memorization-table');
+  tableContainer.innerHTML = `
+    <div class="graphic-box mb-6">
+      <span class="graphic-caption">${MEMORIZATION_TABLE.caption}</span>
+      <div class="tt-wrap">
+        <table class="tt">
+          <thead>
+            <tr>${MEMORIZATION_TABLE.headers.map(h => `<th>${h}</th>`).join('')}</tr>
+          </thead>
+          <tbody>
+            ${MEMORIZATION_TABLE.rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  
+  // Start 10-minute timer
+  const memorizationTime = 10 * 60 * 1000; // 10 minutes in milliseconds
+  const startTime = Date.now();
+  
+  const memorizationTimer = setInterval(() => {
+    const elapsed = Date.now() - startTime;
+    const remaining = memorizationTime - elapsed;
+    
+    if (remaining <= 0) {
+      clearInterval(memorizationTimer);
+      endMemorizationPhase();
+      return;
+    }
+    
+    // Update timer display
+    const minutes = Math.floor(remaining / (1000 * 60));
+    const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+    document.getElementById('memorization-timer').textContent = 
+      `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }, 1000);
+  
+  // Store timer reference for cleanup
+  window.memorizationTimer = memorizationTimer;
+  
+  switchTab('quiz');
+}
+
+function endMemorizationPhase() {
+  // Clear memorization timer
+  if (window.memorizationTimer) {
+    clearInterval(window.memorizationTimer);
+  }
+  
+  // Hide memorization phase
+  document.getElementById('memorization-phase').classList.add('hidden');
+  document.getElementById('quiz-active').classList.remove('hidden');
+  
+  // Start the actual quiz with 10 memorization questions + 70 random questions
+  const memorizationQuestions = shuffleArray(TABLE_MEMORIZATION_QUESTIONS);
+  const randomQuestions = shuffle(QUESTIONS).slice(0, 70);
+  const allQuestions = [...memorizationQuestions, ...randomQuestions];
+  
+  lastQuizConfig = { category: 'Practice Test', count: 80 };
+  quizState = { 
+    questions: allQuestions, 
+    currentIndex: 0, 
+    answers: {}, 
+    selectedChoice: null, 
+    submitted: false, 
+    startTime: Date.now(), 
+    config: { category: 'Practice Test', count: 80 },
+    isPracticeTest: true,
+    timeLimit: 3 * 60 * 60 * 1000 // 3 hours in milliseconds (includes memorization time)
+  };
+  
+  // Start the main timer
+  startTimer();
+  renderQuizQuestion();
+}
+
+function skipMemorization() {
+  // Allow user to skip memorization phase early
+  if (confirm('Are you sure you want to skip the memorization phase? You will not be able to view the table again.')) {
+    endMemorizationPhase();
+  }
+}
+
+let timerInterval = null;
+
+function startTimer() {
+  const timerDisplay = document.getElementById('quiz-timer');
+  const timeDisplay = document.getElementById('timer-display');
+  
+  // Show timer
+  timerDisplay.classList.remove('hidden');
+  
+  // Clear any existing timer
+  if (timerInterval) {
+    clearInterval(timerInterval);
+  }
+  
+  // Update timer every second
+  timerInterval = setInterval(() => {
+    if (!quizState || !quizState.isPracticeTest) {
+      clearInterval(timerInterval);
+      return;
+    }
+    
+    const elapsed = Date.now() - quizState.startTime;
+    const remaining = quizState.timeLimit - elapsed;
+    
+    if (remaining <= 0) {
+      // Time's up - auto submit
+      clearInterval(timerInterval);
+      timeDisplay.textContent = '0:00:00';
+      alert('Time is up! Your practice test will now be submitted.');
+      finishQuiz();
+      return;
+    }
+    
+    // Format time as H:MM:SS
+    const hours = Math.floor(remaining / (1000 * 60 * 60));
+    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+    
+    timeDisplay.textContent = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    // Change color when less than 10 minutes remaining
+    if (remaining < 10 * 60 * 1000) {
+      timeDisplay.classList.add('text-red-600');
+      timeDisplay.classList.remove('text-blue-800');
+    } else {
+      timeDisplay.classList.add('text-blue-800');
+      timeDisplay.classList.remove('text-red-600');
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+  const timerDisplay = document.getElementById('quiz-timer');
+  timerDisplay.classList.add('hidden');
+}
+
+function exitQuiz() { 
+  stopTimer();
+  // Clear memorization timer if running
+  if (window.memorizationTimer) {
+    clearInterval(window.memorizationTimer);
+  }
+  quizState = null; 
+  switchTab('home'); 
+}
 
 function renderQuizQuestion() {
   if (!quizState) return;
@@ -726,7 +1069,11 @@ function renderQuizQuestion() {
   const total = quizState.questions.length;
   const idx = quizState.currentIndex;
 
-  document.getElementById('quiz-subtitle').textContent = `${quizState.config.category} • ${total} questions`;
+  if (quizState.isPracticeTest) {
+    document.getElementById('quiz-subtitle').textContent = `Practice Test • ${total} questions • 3 hour time limit`;
+  } else {
+    document.getElementById('quiz-subtitle').textContent = `${quizState.config.category} • ${total} questions`;
+  }
   document.getElementById('progress-label').textContent = `Question ${idx + 1} of ${total}`;
   const pct = Math.round(((idx + 1) / total) * 100);
   document.getElementById('progress-pct').textContent = pct + '%';
@@ -812,6 +1159,72 @@ function renderQuizQuestion() {
 
   // Nav grid
   renderQuizNav();
+  
+  // Setup keyboard navigation
+  setupKeyboardNavigation();
+}
+
+// Keyboard navigation handler
+let keyboardHandler = null;
+
+function setupKeyboardNavigation() {
+  // Remove existing handler if any
+  if (keyboardHandler) {
+    document.removeEventListener('keydown', keyboardHandler);
+  }
+  
+  keyboardHandler = function(e) {
+    if (!quizState) return;
+    
+    // Don't handle keyboard events if user is typing in an input/textarea
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    
+    const q = quizState.questions[quizState.currentIndex];
+    
+    // Number keys 1-4 to select answers
+    if (e.key >= '1' && e.key <= '4' && !quizState.submitted) {
+      const choiceIndex = parseInt(e.key) - 1;
+      if (choiceIndex < q.choices.length) {
+        selectChoice(choiceIndex);
+        e.preventDefault();
+      }
+    }
+    
+    // Enter key to submit or move to next question
+    if (e.key === 'Enter') {
+      if (!quizState.submitted && quizState.selectedChoice !== null) {
+        // Submit answer
+        submitAnswer();
+        e.preventDefault();
+      } else if (quizState.submitted) {
+        // Move to next question or finish
+        const isLastQuestion = quizState.currentIndex === quizState.questions.length - 1;
+        if (isLastQuestion) {
+          finishQuiz();
+        } else {
+          nextQuestion();
+        }
+        e.preventDefault();
+      }
+    }
+    
+    // Arrow keys for navigation (after submission)
+    if (quizState.submitted) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        if (quizState.currentIndex < quizState.questions.length - 1) {
+          nextQuestion();
+          e.preventDefault();
+        }
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        if (quizState.currentIndex > 0) {
+          prevQuestion();
+          e.preventDefault();
+        }
+      }
+    }
+  };
+  
+  document.addEventListener('keydown', keyboardHandler);
 }
 
 function renderQuizNav() {
@@ -857,6 +1270,7 @@ function jumpToQuestion() { const val = parseInt(document.getElementById('jump-i
 
 function finishQuiz() {
   if (!quizState) return;
+  stopTimer();
   const correct = Object.values(quizState.answers).filter(a => a.correct).length;
   const total = quizState.questions.length;
   const elapsed = Math.floor((Date.now() - quizState.startTime) / 1000);
@@ -870,7 +1284,16 @@ function finishQuiz() {
   document.getElementById('results-icon').textContent = pct >= 70 ? '🎉' : pct >= 50 ? '👍' : '📚';
   document.getElementById('r-score').textContent = `${correct}/${total}`;
   document.getElementById('r-accuracy').textContent = pct + '%';
-  document.getElementById('r-time').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+  
+  // Format time display based on quiz type
+  if (quizState.isPracticeTest) {
+    const hours = Math.floor(elapsed / 3600);
+    const minsRemainder = Math.floor((elapsed % 3600) / 60);
+    const secsRemainder = elapsed % 60;
+    document.getElementById('r-time').textContent = `${hours}:${minsRemainder.toString().padStart(2, '0')}:${secsRemainder.toString().padStart(2, '0')}`;
+  } else {
+    document.getElementById('r-time').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
   
   // Generate practice recommendations
   const recommendations = generateRecommendations(quizState);
