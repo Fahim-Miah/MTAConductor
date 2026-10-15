@@ -718,7 +718,96 @@ function startQuiz(category, count) {
   renderQuizQuestion();
 }
 
-function exitQuiz() { quizState = null; switchTab('home'); }
+function startPracticeTest() {
+  // Start a practice test with 80 questions and 3-hour timer
+  const filtered = shuffle(QUESTIONS).slice(0, 80);
+  lastQuizConfig = { category: 'Practice Test', count: 80 };
+  quizState = { 
+    questions: filtered, 
+    currentIndex: 0, 
+    answers: {}, 
+    selectedChoice: null, 
+    submitted: false, 
+    startTime: Date.now(), 
+    config: { category: 'Practice Test', count: 80 },
+    isPracticeTest: true,
+    timeLimit: 3 * 60 * 60 * 1000 // 3 hours in milliseconds
+  };
+  
+  // Start the timer
+  startTimer();
+  
+  switchTab('quiz');
+  document.getElementById('quiz-empty').classList.add('hidden');
+  document.getElementById('quiz-active').classList.remove('hidden');
+  renderQuizQuestion();
+}
+
+let timerInterval = null;
+
+function startTimer() {
+  const timerDisplay = document.getElementById('quiz-timer');
+  const timeDisplay = document.getElementById('timer-display');
+  
+  // Show timer
+  timerDisplay.classList.remove('hidden');
+  
+  // Clear any existing timer
+  if (timerInterval) {
+    clearInterval(timerInterval);
+  }
+  
+  // Update timer every second
+  timerInterval = setInterval(() => {
+    if (!quizState || !quizState.isPracticeTest) {
+      clearInterval(timerInterval);
+      return;
+    }
+    
+    const elapsed = Date.now() - quizState.startTime;
+    const remaining = quizState.timeLimit - elapsed;
+    
+    if (remaining <= 0) {
+      // Time's up - auto submit
+      clearInterval(timerInterval);
+      timeDisplay.textContent = '0:00:00';
+      alert('Time is up! Your practice test will now be submitted.');
+      finishQuiz();
+      return;
+    }
+    
+    // Format time as H:MM:SS
+    const hours = Math.floor(remaining / (1000 * 60 * 60));
+    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+    
+    timeDisplay.textContent = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    // Change color when less than 10 minutes remaining
+    if (remaining < 10 * 60 * 1000) {
+      timeDisplay.classList.add('text-red-600');
+      timeDisplay.classList.remove('text-blue-800');
+    } else {
+      timeDisplay.classList.add('text-blue-800');
+      timeDisplay.classList.remove('text-red-600');
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+  const timerDisplay = document.getElementById('quiz-timer');
+  timerDisplay.classList.add('hidden');
+}
+
+function exitQuiz() { 
+  stopTimer();
+  quizState = null; 
+  switchTab('home'); 
+}
 
 function renderQuizQuestion() {
   if (!quizState) return;
@@ -726,7 +815,11 @@ function renderQuizQuestion() {
   const total = quizState.questions.length;
   const idx = quizState.currentIndex;
 
-  document.getElementById('quiz-subtitle').textContent = `${quizState.config.category} • ${total} questions`;
+  if (quizState.isPracticeTest) {
+    document.getElementById('quiz-subtitle').textContent = `Practice Test • ${total} questions • 3 hour time limit`;
+  } else {
+    document.getElementById('quiz-subtitle').textContent = `${quizState.config.category} • ${total} questions`;
+  }
   document.getElementById('progress-label').textContent = `Question ${idx + 1} of ${total}`;
   const pct = Math.round(((idx + 1) / total) * 100);
   document.getElementById('progress-pct').textContent = pct + '%';
@@ -857,6 +950,7 @@ function jumpToQuestion() { const val = parseInt(document.getElementById('jump-i
 
 function finishQuiz() {
   if (!quizState) return;
+  stopTimer();
   const correct = Object.values(quizState.answers).filter(a => a.correct).length;
   const total = quizState.questions.length;
   const elapsed = Math.floor((Date.now() - quizState.startTime) / 1000);
@@ -870,7 +964,16 @@ function finishQuiz() {
   document.getElementById('results-icon').textContent = pct >= 70 ? '🎉' : pct >= 50 ? '👍' : '📚';
   document.getElementById('r-score').textContent = `${correct}/${total}`;
   document.getElementById('r-accuracy').textContent = pct + '%';
-  document.getElementById('r-time').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+  
+  // Format time display based on quiz type
+  if (quizState.isPracticeTest) {
+    const hours = Math.floor(elapsed / 3600);
+    const minsRemainder = Math.floor((elapsed % 3600) / 60);
+    const secsRemainder = elapsed % 60;
+    document.getElementById('r-time').textContent = `${hours}:${minsRemainder.toString().padStart(2, '0')}:${secsRemainder.toString().padStart(2, '0')}`;
+  } else {
+    document.getElementById('r-time').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
   
   // Generate practice recommendations
   const recommendations = generateRecommendations(quizState);
