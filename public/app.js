@@ -39,138 +39,161 @@ const CATEGORIES = [
   { name: "Official NYCTA Exam", icon: "📜", count: 101 },
 ];
 
-// ============ TABLE MEMORIZATION QUESTIONS ============
-// These 10 questions are based on a table that test takers memorize for 10 minutes
-const TABLE_MEMORIZATION_QUESTIONS = [
+// ============ TABLE MEMORIZATION SYSTEM ============
+// Multiple table variations that rotate randomly
+const TABLE_VARIATIONS = [
   {
-    id: 'mem1',
-    category: 'Table Memorization',
-    topics: ['Table Memorization'],
-    q: 'According to the table, what is the maximum speed for a train traveling through a sharp curve in Zone C?',
-    choices: ['15 MPH', '20 MPH', '30 MPH', '10 MPH'],
-    correct: 0,
-    explanation: 'Zone C with sharp curve = 15 MPH maximum speed.'
+    id: 1,
+    caption: 'Table: MTA Operating Reference Data - Set A',
+    headers: ['Category', 'Parameter', 'Value', 'Notes'],
+    rows: [
+      ['Speed Limits', 'Zone A - Straight Track', '55 MPH', 'Maximum authorized speed'],
+      ['Speed Limits', 'Zone A - Moderate Curve', '35 MPH', 'Reduce speed for curves'],
+      ['Speed Limits', 'Zone A - Sharp Curve', '15 MPH', 'Significant speed reduction'],
+      ['Speed Limits', 'Zone B - Straight Track', '55 MPH', 'Maximum authorized speed'],
+      ['Speed Limits', 'Zone B - Sharp Curve', '20 MPH', 'Moderate reduction'],
+      ['Speed Limits', 'Zone C - Straight Track', '50 MPH', 'Lower maximum speed'],
+      ['Speed Limits', 'Zone C - Sharp Curve', '15 MPH', 'Significant reduction'],
+      ['Signal Aspects', 'Green', 'Clear', 'Proceed at authorized speed'],
+      ['Signal Aspects', 'Yellow', 'Approach', 'Prepare to stop at next signal'],
+      ['Signal Aspects', 'Red', 'Stop', 'Stop and do not proceed'],
+      ['Signal Aspects', 'Flashing Yellow', 'Advance Approach', 'Prepare to stop at second signal'],
+      ['Signal Aspects', 'Red over Yellow', 'Restricting', 'Proceed at restricted speed (max 15 MPH)'],
+      ['Brake Tests', 'Initial Application', '90 PSI min', '3 PSI/min max leakage'],
+      ['Brake Tests', 'Full Service', '90 PSI min', '3 PSI/min max leakage'],
+      ['Brake Tests', 'Yard Departure Check', '90 PSI min', '2 PSI/min max leakage'],
+      ['Equipment', 'R160 Car Weight Capacity', '100 tons per car', 'Maximum load'],
+      ['Equipment', 'Standard Car Length', '51 feet', 'R142, R160, R179, R211'],
+      ['Equipment', 'R46 Car Length', '75 feet', 'Longer cars'],
+      ['Schedule', 'Rush Hour Headway', '12 minutes', 'Peak service frequency'],
+      ['Schedule', 'Off-Peak Headway', '20 minutes', 'Reduced service'],
+      ['Schedule', 'Sample Journey A to D', '1 hour 30 minutes', '8:15 AM to 9:45 AM'],
+      ['Shifts', '06:00 Start - Meal Break', '10:00 - 11:00', '4 hours into shift'],
+      ['Shifts', '14:00 Start - Meal Break', '18:00 - 19:00', '4 hours into shift'],
+      ['Defect Codes', 'D-1 Minor Interior Damage', 'Report at end of run', 'Low severity'],
+      ['Defect Codes', 'D-2 Door Sensor Fault', 'Take out at terminal', 'Medium severity'],
+      ['Defect Codes', 'D-3 Brake Shoe Wear', 'Immediate inspection', 'High severity'],
+      ['Defect Codes', 'D-4 Third Rail Shoe Missing', 'Stop immediately', 'Critical severity'],
+      ['Stopping Distance', '30 MPH', '600 feet', 'Emergency stop distance'],
+      ['Stopping Distance', '15 MPH', '300 feet', 'Quarter of 30 MPH distance'],
+      ['Weather', 'Fog < 100 ft visibility', 'Restricted Speed (15 MPH)', 'Sound horn frequently']
+    ],
+    questions: [
+      { q: 'According to the table, what is the maximum speed for a train traveling through a sharp curve in Zone C?', choices: ['15 MPH', '20 MPH', '30 MPH', '10 MPH'], correct: 0, explanation: 'Zone C with sharp curve = 15 MPH maximum speed.' },
+      { q: 'If a train departs from Station A at 8:15 AM and arrives at Station D at 9:45 AM, how long is the journey?', choices: ['1 hour 15 minutes', '1 hour 30 minutes', '1 hour 45 minutes', '2 hours'], correct: 1, explanation: 'From 8:15 AM to 9:45 AM = 1 hour 30 minutes.' },
+      { q: 'Based on the equipment specifications table, what is the total weight capacity of a 6-car train?', choices: ['480 tons', '540 tons', '600 tons', '720 tons'], correct: 2, explanation: 'Each car has 100 ton capacity × 6 cars = 600 tons total.' },
+      { q: 'According to the signal aspect table, what does a flashing yellow signal indicate?', choices: ['Stop', 'Proceed at restricted speed', 'Advance approach - prepare to stop at second signal', 'Clear - proceed at authorized speed'], correct: 2, explanation: 'Flashing yellow = Advance approach, prepare to stop at the second signal.' },
+      { q: 'If the schedule shows trains departing every 12 minutes during rush hour, how many trains depart in 2 hours?', choices: ['8 trains', '10 trains', '12 trains', '15 trains'], correct: 1, explanation: '120 minutes ÷ 12 minutes per train = 10 trains.' },
+      { q: 'According to the brake test procedures table, what is the minimum air pressure required before departure?', choices: ['70 PSI', '80 PSI', '90 PSI', '100 PSI'], correct: 2, explanation: 'Yard departure check requires minimum 90 PSI.' },
+      { q: 'Based on the track speed limits table, what is the maximum speed for a straight track in Zone A?', choices: ['45 MPH', '50 MPH', '55 MPH', '60 MPH'], correct: 2, explanation: 'Zone A straight track = 55 MPH maximum.' },
+      { q: 'If a train must stop within 600 feet at 30 MPH, approximately how far must it stop at 15 MPH?', choices: ['150 feet', '300 feet', '450 feet', '600 feet'], correct: 1, explanation: 'Stopping distance is proportional to speed squared, so half speed = quarter distance = 300 feet.' },
+      { q: 'According to the shift schedule table, if a conductor starts at 06:00, when is their meal break?', choices: ['08:00 - 09:00', '10:00 - 11:00', '12:00 - 13:00', '14:00 - 15:00'], correct: 1, explanation: 'Shift starting at 06:00 has meal break window 10:00 - 11:00.' },
+      { q: 'Based on the defect codes table, what action is required for a D-4 defect?', choices: ['Report at end of run', 'Take car out of service at terminal', 'Immediate inspection', 'Stop immediately, do not move'], correct: 3, explanation: 'D-4 (Third Rail Shoe Missing) is critical - stop immediately, do not move.' }
+    ]
   },
   {
-    id: 'mem2',
-    category: 'Table Memorization',
-    topics: ['Table Memorization'],
-    q: 'If a train departs from Station A at 8:15 AM and arrives at Station D at 9:45 AM, how long is the journey?',
-    choices: ['1 hour 15 minutes', '1 hour 30 minutes', '1 hour 45 minutes', '2 hours'],
-    correct: 1,
-    explanation: 'From 8:15 AM to 9:45 AM = 1 hour 30 minutes.'
+    id: 2,
+    caption: 'Table: MTA Operating Reference Data - Set B',
+    headers: ['Category', 'Parameter', 'Value', 'Notes'],
+    rows: [
+      ['Speed Limits', 'Zone A - Straight Track', '60 MPH', 'Maximum authorized speed'],
+      ['Speed Limits', 'Zone A - Moderate Curve', '40 MPH', 'Reduce speed for curves'],
+      ['Speed Limits', 'Zone A - Sharp Curve', '20 MPH', 'Significant speed reduction'],
+      ['Speed Limits', 'Zone B - Straight Track', '50 MPH', 'Maximum authorized speed'],
+      ['Speed Limits', 'Zone B - Sharp Curve', '25 MPH', 'Moderate reduction'],
+      ['Speed Limits', 'Zone C - Straight Track', '45 MPH', 'Lower maximum speed'],
+      ['Speed Limits', 'Zone C - Sharp Curve', '10 MPH', 'Significant reduction'],
+      ['Signal Aspects', 'Green', 'Clear', 'Proceed at authorized speed'],
+      ['Signal Aspects', 'Yellow', 'Approach', 'Prepare to stop at next signal'],
+      ['Signal Aspects', 'Red', 'Stop', 'Stop and do not proceed'],
+      ['Signal Aspects', 'Flashing Yellow', 'Advance Approach', 'Prepare to stop at second signal'],
+      ['Signal Aspects', 'Red over Yellow', 'Restricting', 'Proceed at restricted speed (max 10 MPH)'],
+      ['Brake Tests', 'Initial Application', '85 PSI min', '4 PSI/min max leakage'],
+      ['Brake Tests', 'Full Service', '85 PSI min', '4 PSI/min max leakage'],
+      ['Brake Tests', 'Yard Departure Check', '85 PSI min', '3 PSI/min max leakage'],
+      ['Equipment', 'R160 Car Weight Capacity', '110 tons per car', 'Maximum load'],
+      ['Equipment', 'Standard Car Length', '51 feet', 'R142, R160, R179, R211'],
+      ['Equipment', 'R46 Car Length', '75 feet', 'Longer cars'],
+      ['Schedule', 'Rush Hour Headway', '10 minutes', 'Peak service frequency'],
+      ['Schedule', 'Off-Peak Headway', '15 minutes', 'Reduced service'],
+      ['Schedule', 'Sample Journey A to D', '2 hours', '7:00 AM to 9:00 AM'],
+      ['Shifts', '07:00 Start - Meal Break', '11:00 - 12:00', '4 hours into shift'],
+      ['Shifts', '15:00 Start - Meal Break', '19:00 - 20:00', '4 hours into shift'],
+      ['Defect Codes', 'D-1 Minor Interior Damage', 'Report at end of run', 'Low severity'],
+      ['Defect Codes', 'D-2 Door Sensor Fault', 'Take out at terminal', 'Medium severity'],
+      ['Defect Codes', 'D-3 Brake Shoe Wear', 'Immediate inspection', 'High severity'],
+      ['Defect Codes', 'D-4 Third Rail Shoe Missing', 'Stop immediately', 'Critical severity'],
+      ['Stopping Distance', '40 MPH', '800 feet', 'Emergency stop distance'],
+      ['Stopping Distance', '20 MPH', '400 feet', 'Half of 40 MPH distance'],
+      ['Weather', 'Heavy Rain', 'Reduce speed by 10 MPH', 'Wipers on high']
+    ],
+    questions: [
+      { q: 'According to the table, what is the maximum speed for a train traveling through a sharp curve in Zone C?', choices: ['10 MPH', '15 MPH', '20 MPH', '25 MPH'], correct: 0, explanation: 'Zone C with sharp curve = 10 MPH maximum speed.' },
+      { q: 'If a train departs from Station A at 7:00 AM and arrives at Station D at 9:00 AM, how long is the journey?', choices: ['1 hour 30 minutes', '2 hours', '2 hours 30 minutes', '3 hours'], correct: 1, explanation: 'From 7:00 AM to 9:00 AM = 2 hours.' },
+      { q: 'Based on the equipment specifications table, what is the total weight capacity of a 6-car train?', choices: ['540 tons', '600 tons', '660 tons', '720 tons'], correct: 2, explanation: 'Each car has 110 ton capacity × 6 cars = 660 tons total.' },
+      { q: 'According to the signal aspect table, what does a flashing yellow signal indicate?', choices: ['Stop', 'Proceed at restricted speed', 'Advance approach - prepare to stop at second signal', 'Clear - proceed at authorized speed'], correct: 2, explanation: 'Flashing yellow = Advance approach, prepare to stop at the second signal.' },
+      { q: 'If the schedule shows trains departing every 10 minutes during rush hour, how many trains depart in 2 hours?', choices: ['10 trains', '12 trains', '15 trains', '20 trains'], correct: 1, explanation: '120 minutes ÷ 10 minutes per train = 12 trains.' },
+      { q: 'According to the brake test procedures table, what is the minimum air pressure required before departure?', choices: ['75 PSI', '80 PSI', '85 PSI', '90 PSI'], correct: 2, explanation: 'Yard departure check requires minimum 85 PSI.' },
+      { q: 'Based on the track speed limits table, what is the maximum speed for a straight track in Zone A?', choices: ['50 MPH', '55 MPH', '60 MPH', '65 MPH'], correct: 2, explanation: 'Zone A straight track = 60 MPH maximum.' },
+      { q: 'If a train must stop within 800 feet at 40 MPH, approximately how far must it stop at 20 MPH?', choices: ['200 feet', '400 feet', '600 feet', '800 feet'], correct: 1, explanation: 'Stopping distance is proportional to speed squared, so half speed = quarter distance = 400 feet.' },
+      { q: 'According to the shift schedule table, if a conductor starts at 07:00, when is their meal break?', choices: ['09:00 - 10:00', '11:00 - 12:00', '13:00 - 14:00', '15:00 - 16:00'], correct: 1, explanation: 'Shift starting at 07:00 has meal break window 11:00 - 12:00.' },
+      { q: 'Based on the defect codes table, what action is required for a D-4 defect?', choices: ['Report at end of run', 'Take car out of service at terminal', 'Immediate inspection', 'Stop immediately, do not move'], correct: 3, explanation: 'D-4 (Third Rail Shoe Missing) is critical - stop immediately, do not move.' }
+    ]
   },
   {
-    id: 'mem3',
-    category: 'Table Memorization',
-    topics: ['Table Memorization'],
-    q: 'Based on the equipment specifications table, what is the total weight capacity of a 6-car train?',
-    choices: ['480 tons', '540 tons', '600 tons', '720 tons'],
-    correct: 2,
-    explanation: 'Each car has 100 ton capacity × 6 cars = 600 tons total.'
-  },
-  {
-    id: 'mem4',
-    category: 'Table Memorization',
-    topics: ['Table Memorization'],
-    q: 'According to the signal aspect table, what does a flashing yellow signal indicate?',
-    choices: ['Stop', 'Proceed at restricted speed', 'Advance approach - prepare to stop at second signal', 'Clear - proceed at authorized speed'],
-    correct: 2,
-    explanation: 'Flashing yellow = Advance approach, prepare to stop at the second signal.'
-  },
-  {
-    id: 'mem5',
-    category: 'Table Memorization',
-    topics: ['Table Memorization'],
-    q: 'If the schedule shows trains departing every 12 minutes during rush hour, how many trains depart in 2 hours?',
-    choices: ['8 trains', '10 trains', '12 trains', '15 trains'],
-    correct: 1,
-    explanation: '120 minutes ÷ 12 minutes per train = 10 trains.'
-  },
-  {
-    id: 'mem6',
-    category: 'Table Memorization',
-    topics: ['Table Memorization'],
-    q: 'According to the brake test procedures table, what is the minimum air pressure required before departure?',
-    choices: ['70 PSI', '80 PSI', '90 PSI', '100 PSI'],
-    correct: 2,
-    explanation: 'Yard departure check requires minimum 90 PSI.'
-  },
-  {
-    id: 'mem7',
-    category: 'Table Memorization',
-    topics: ['Table Memorization'],
-    q: 'Based on the track speed limits table, what is the maximum speed for a straight track in Zone A?',
-    choices: ['45 MPH', '50 MPH', '55 MPH', '60 MPH'],
-    correct: 2,
-    explanation: 'Zone A straight track = 55 MPH maximum.'
-  },
-  {
-    id: 'mem8',
-    category: 'Table Memorization',
-    topics: ['Table Memorization'],
-    q: 'If a train must stop within 600 feet at 30 MPH, approximately how far must it stop at 15 MPH?',
-    choices: ['150 feet', '300 feet', '450 feet', '600 feet'],
-    correct: 1,
-    explanation: 'Stopping distance is proportional to speed squared, so half speed = quarter distance = 300 feet.'
-  },
-  {
-    id: 'mem9',
-    category: 'Table Memorization',
-    topics: ['Table Memorization'],
-    q: 'According to the shift schedule table, if a conductor starts at 06:00, when is their meal break?',
-    choices: ['08:00 - 09:00', '10:00 - 11:00', '12:00 - 13:00', '14:00 - 15:00'],
-    correct: 1,
-    explanation: 'Shift starting at 06:00 has meal break window 10:00 - 11:00.'
-  },
-  {
-    id: 'mem10',
-    category: 'Table Memorization',
-    topics: ['Table Memorization'],
-    q: 'Based on the defect codes table, what action is required for a D-4 defect?',
-    choices: ['Report at end of run', 'Take car out of service at terminal', 'Immediate inspection', 'Stop immediately, do not move'],
-    correct: 3,
-    explanation: 'D-4 (Third Rail Shoe Missing) is critical - stop immediately, do not move.'
+    id: 3,
+    caption: 'Table: MTA Operating Reference Data - Set C',
+    headers: ['Category', 'Parameter', 'Value', 'Notes'],
+    rows: [
+      ['Speed Limits', 'Zone A - Straight Track', '50 MPH', 'Maximum authorized speed'],
+      ['Speed Limits', 'Zone A - Moderate Curve', '30 MPH', 'Reduce speed for curves'],
+      ['Speed Limits', 'Zone A - Sharp Curve', '10 MPH', 'Significant speed reduction'],
+      ['Speed Limits', 'Zone B - Straight Track', '45 MPH', 'Maximum authorized speed'],
+      ['Speed Limits', 'Zone B - Sharp Curve', '15 MPH', 'Moderate reduction'],
+      ['Speed Limits', 'Zone C - Straight Track', '40 MPH', 'Lower maximum speed'],
+      ['Speed Limits', 'Zone C - Sharp Curve', '10 MPH', 'Significant reduction'],
+      ['Signal Aspects', 'Green', 'Clear', 'Proceed at authorized speed'],
+      ['Signal Aspects', 'Yellow', 'Approach', 'Prepare to stop at next signal'],
+      ['Signal Aspects', 'Red', 'Stop', 'Stop and do not proceed'],
+      ['Signal Aspects', 'Flashing Yellow', 'Advance Approach', 'Prepare to stop at second signal'],
+      ['Signal Aspects', 'Red over Yellow', 'Restricting', 'Proceed at restricted speed (max 10 MPH)'],
+      ['Brake Tests', 'Initial Application', '95 PSI min', '2 PSI/min max leakage'],
+      ['Brake Tests', 'Full Service', '95 PSI min', '2 PSI/min max leakage'],
+      ['Brake Tests', 'Yard Departure Check', '95 PSI min', '1 PSI/min max leakage'],
+      ['Equipment', 'R160 Car Weight Capacity', '95 tons per car', 'Maximum load'],
+      ['Equipment', 'Standard Car Length', '51 feet', 'R142, R160, R179, R211'],
+      ['Equipment', 'R46 Car Length', '75 feet', 'Longer cars'],
+      ['Schedule', 'Rush Hour Headway', '15 minutes', 'Peak service frequency'],
+      ['Schedule', 'Off-Peak Headway', '25 minutes', 'Reduced service'],
+      ['Schedule', 'Sample Journey A to D', '1 hour 45 minutes', '9:00 AM to 10:45 AM'],
+      ['Shifts', '08:00 Start - Meal Break', '12:00 - 13:00', '4 hours into shift'],
+      ['Shifts', '16:00 Start - Meal Break', '20:00 - 21:00', '4 hours into shift'],
+      ['Defect Codes', 'D-1 Minor Interior Damage', 'Report at end of run', 'Low severity'],
+      ['Defect Codes', 'D-2 Door Sensor Fault', 'Take out at terminal', 'Medium severity'],
+      ['Defect Codes', 'D-3 Brake Shoe Wear', 'Immediate inspection', 'High severity'],
+      ['Defect Codes', 'D-4 Third Rail Shoe Missing', 'Stop immediately', 'Critical severity'],
+      ['Stopping Distance', '25 MPH', '400 feet', 'Emergency stop distance'],
+      ['Stopping Distance', '10 MPH', '100 feet', 'Very short distance'],
+      ['Weather', 'Snow/Ice', 'Reduce speed by 20 MPH', 'Sand cars']
+    ],
+    questions: [
+      { q: 'According to the table, what is the maximum speed for a train traveling through a sharp curve in Zone C?', choices: ['10 MPH', '15 MPH', '20 MPH', '25 MPH'], correct: 0, explanation: 'Zone C with sharp curve = 10 MPH maximum speed.' },
+      { q: 'If a train departs from Station A at 9:00 AM and arrives at Station D at 10:45 AM, how long is the journey?', choices: ['1 hour 30 minutes', '1 hour 45 minutes', '2 hours', '2 hours 15 minutes'], correct: 1, explanation: 'From 9:00 AM to 10:45 AM = 1 hour 45 minutes.' },
+      { q: 'Based on the equipment specifications table, what is the total weight capacity of a 6-car train?', choices: ['480 tons', '540 tons', '570 tons', '600 tons'], correct: 2, explanation: 'Each car has 95 ton capacity × 6 cars = 570 tons total.' },
+      { q: 'According to the signal aspect table, what does a flashing yellow signal indicate?', choices: ['Stop', 'Proceed at restricted speed', 'Advance approach - prepare to stop at second signal', 'Clear - proceed at authorized speed'], correct: 2, explanation: 'Flashing yellow = Advance approach, prepare to stop at the second signal.' },
+      { q: 'If the schedule shows trains departing every 15 minutes during rush hour, how many trains depart in 2 hours?', choices: ['6 trains', '8 trains', '10 trains', '12 trains'], correct: 1, explanation: '120 minutes ÷ 15 minutes per train = 8 trains.' },
+      { q: 'According to the brake test procedures table, what is the minimum air pressure required before departure?', choices: ['85 PSI', '90 PSI', '95 PSI', '100 PSI'], correct: 2, explanation: 'Yard departure check requires minimum 95 PSI.' },
+      { q: 'Based on the track speed limits table, what is the maximum speed for a straight track in Zone A?', choices: ['40 MPH', '45 MPH', '50 MPH', '55 MPH'], correct: 2, explanation: 'Zone A straight track = 50 MPH maximum.' },
+      { q: 'If a train must stop within 400 feet at 25 MPH, approximately how far must it stop at 10 MPH?', choices: ['50 feet', '100 feet', '150 feet', '200 feet'], correct: 1, explanation: 'Stopping distance is proportional to speed squared, so 10/25 = 0.4, and 400 × 0.4² = 100 feet.' },
+      { q: 'According to the shift schedule table, if a conductor starts at 08:00, when is their meal break?', choices: ['10:00 - 11:00', '12:00 - 13:00', '14:00 - 15:00', '16:00 - 17:00'], correct: 1, explanation: 'Shift starting at 08:00 has meal break window 12:00 - 13:00.' },
+      { q: 'Based on the defect codes table, what action is required for a D-4 defect?', choices: ['Report at end of run', 'Take car out of service at terminal', 'Immediate inspection', 'Stop immediately, do not move'], correct: 3, explanation: 'D-4 (Third Rail Shoe Missing) is critical - stop immediately, do not move.' }
+    ]
   }
 ];
 
-// The table that test takers memorize
-const MEMORIZATION_TABLE = {
-  caption: 'Table: MTA Operating Reference Data',
-  headers: ['Category', 'Parameter', 'Value', 'Notes'],
-  rows: [
-    ['Speed Limits', 'Zone A - Straight Track', '55 MPH', 'Maximum authorized speed'],
-    ['Speed Limits', 'Zone A - Moderate Curve', '35 MPH', 'Reduce speed for curves'],
-    ['Speed Limits', 'Zone A - Sharp Curve', '15 MPH', 'Significant speed reduction'],
-    ['Speed Limits', 'Zone B - Straight Track', '55 MPH', 'Maximum authorized speed'],
-    ['Speed Limits', 'Zone B - Sharp Curve', '20 MPH', 'Moderate reduction'],
-    ['Speed Limits', 'Zone C - Straight Track', '50 MPH', 'Lower maximum speed'],
-    ['Speed Limits', 'Zone C - Sharp Curve', '15 MPH', 'Significant reduction'],
-    ['Signal Aspects', 'Green', 'Clear', 'Proceed at authorized speed'],
-    ['Signal Aspects', 'Yellow', 'Approach', 'Prepare to stop at next signal'],
-    ['Signal Aspects', 'Red', 'Stop', 'Stop and do not proceed'],
-    ['Signal Aspects', 'Flashing Yellow', 'Advance Approach', 'Prepare to stop at second signal'],
-    ['Signal Aspects', 'Red over Yellow', 'Restricting', 'Proceed at restricted speed (max 15 MPH)'],
-    ['Brake Tests', 'Initial Application', '90 PSI min', '3 PSI/min max leakage'],
-    ['Brake Tests', 'Full Service', '90 PSI min', '3 PSI/min max leakage'],
-    ['Brake Tests', 'Yard Departure Check', '90 PSI min', '2 PSI/min max leakage'],
-    ['Equipment', 'R160 Car Weight Capacity', '100 tons per car', 'Maximum load'],
-    ['Equipment', 'Standard Car Length', '51 feet', 'R142, R160, R179, R211'],
-    ['Equipment', 'R46 Car Length', '75 feet', 'Longer cars'],
-    ['Schedule', 'Rush Hour Headway', '12 minutes', 'Peak service frequency'],
-    ['Schedule', 'Off-Peak Headway', '20 minutes', 'Reduced service'],
-    ['Schedule', 'Sample Journey A to D', '1 hour 30 minutes', '8:15 AM to 9:45 AM'],
-    ['Shifts', '06:00 Start - Meal Break', '10:00 - 11:00', '4 hours into shift'],
-    ['Shifts', '14:00 Start - Meal Break', '18:00 - 19:00', '4 hours into shift'],
-    ['Defect Codes', 'D-1 Minor Interior Damage', 'Report at end of run', 'Low severity'],
-    ['Defect Codes', 'D-2 Door Sensor Fault', 'Take out at terminal', 'Medium severity'],
-    ['Defect Codes', 'D-3 Brake Shoe Wear', 'Immediate inspection', 'High severity'],
-    ['Defect Codes', 'D-4 Third Rail Shoe Missing', 'Stop immediately', 'Critical severity'],
-    ['Stopping Distance', '30 MPH', '600 feet', 'Emergency stop distance'],
-    ['Stopping Distance', '15 MPH', '300 feet', 'Quarter of 30 MPH distance'],
-    ['Weather', 'Fog < 100 ft visibility', 'Restricted Speed (15 MPH)', 'Sound horn frequently']
-  ]
-};
+// Current table and questions (will be set randomly)
+let currentMemorizationTable = null;
+let currentMemorizationQuestions = null;
 
 // ============ HELPER FUNCTIONS ============
 function shuffleArray(array) {
@@ -899,6 +922,14 @@ function startPracticeTest() {
 }
 
 function startTableMemorizationPhase() {
+  // Randomly select a table variation
+  const randomIndex = Math.floor(Math.random() * TABLE_VARIATIONS.length);
+  const selectedVariation = TABLE_VARIATIONS[randomIndex];
+  
+  // Store current table and questions
+  currentMemorizationTable = selectedVariation;
+  currentMemorizationQuestions = selectedVariation.questions;
+  
   // Show the table for memorization
   const memorizationPhase = document.getElementById('memorization-phase');
   const quizActive = document.getElementById('quiz-active');
@@ -912,14 +943,14 @@ function startTableMemorizationPhase() {
   const tableContainer = document.getElementById('memorization-table');
   tableContainer.innerHTML = `
     <div class="graphic-box mb-6">
-      <span class="graphic-caption">${MEMORIZATION_TABLE.caption}</span>
+      <span class="graphic-caption">${currentMemorizationTable.caption}</span>
       <div class="tt-wrap">
         <table class="tt">
           <thead>
-            <tr>${MEMORIZATION_TABLE.headers.map(h => `<th>${h}</th>`).join('')}</tr>
+            <tr>${currentMemorizationTable.headers.map(h => `<th>${h}</th>`).join('')}</tr>
           </thead>
           <tbody>
-            ${MEMORIZATION_TABLE.rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}
+            ${currentMemorizationTable.rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}
           </tbody>
         </table>
       </div>
@@ -964,7 +995,13 @@ function endMemorizationPhase() {
   document.getElementById('quiz-active').classList.remove('hidden');
   
   // Start the actual quiz with 10 memorization questions + 70 random questions
-  const memorizationQuestions = shuffleArray(TABLE_MEMORIZATION_QUESTIONS);
+  // Use the questions from the randomly selected table variation
+  const memorizationQuestions = shuffleArray(currentMemorizationQuestions).map((q, idx) => ({
+    ...q,
+    id: `mem${idx + 1}`,
+    category: 'Table Memorization',
+    topics: ['Table Memorization']
+  }));
   const randomQuestions = shuffle(QUESTIONS).slice(0, 70);
   const allQuestions = [...memorizationQuestions, ...randomQuestions];
   
