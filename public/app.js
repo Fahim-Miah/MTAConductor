@@ -1566,7 +1566,13 @@ function renderReview() {
   // Determine which questions to show
   let questionsToShow = QUESTIONS;
   if (reviewQuizQuestions && reviewQuizQuestions.length > 0) {
-    questionsToShow = QUESTIONS.filter(q => reviewQuizQuestions.includes(q.id));
+    // If reviewing a quiz, use the questions from quizState (includes memorization questions)
+    if (quizState && quizState.questions) {
+      questionsToShow = quizState.questions;
+    } else {
+      // Fallback to filtering QUESTIONS if quizState is not available
+      questionsToShow = QUESTIONS.filter(q => reviewQuizQuestions.includes(q.id));
+    }
   }
   
   document.getElementById('review-nav-count').textContent = `(${questionsToShow.length})`;
@@ -1621,9 +1627,16 @@ function setReviewFilter(cat) {
 function scrollToReviewQ(id) { const el = document.getElementById('review-q-' + id); if (el) el.scrollIntoView({ behavior: 'smooth' }); }
 function reviewJumpTo() { 
   const val = parseInt(document.getElementById('review-jump-input').value); 
-  let questionsToSearch = reviewQuizQuestions && reviewQuizQuestions.length > 0 
-    ? QUESTIONS.filter(q => reviewQuizQuestions.includes(q.id))
-    : QUESTIONS;
+  let questionsToSearch = QUESTIONS;
+  
+  // If reviewing a quiz, use quizState questions (includes memorization questions)
+  if (reviewQuizQuestions && reviewQuizQuestions.length > 0 && quizState && quizState.questions) {
+    questionsToSearch = quizState.questions;
+  } else if (reviewQuizQuestions && reviewQuizQuestions.length > 0) {
+    // Fallback to filtering QUESTIONS
+    questionsToSearch = QUESTIONS.filter(q => reviewQuizQuestions.includes(q.id));
+  }
+  
   if (val && questionsToSearch[val - 1]) scrollToReviewQ(questionsToSearch[val - 1].id); 
 }
 
