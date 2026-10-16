@@ -1734,7 +1734,7 @@ function renderStats() {
         <div class="flex items-center justify-between">
           <span class="text-sm text-gray-600">${s.date}</span>
           <span class="text-sm font-semibold text-[#0039A6]">${s.score}/${s.total}</span>
-          <span class="text-sm font-semibold ${s.accuracy >= 70 ? 'text-[#00A651]' : 'text-[#EE3124]'">${s.accuracy}%</span>
+          <span class="text-sm font-semibold ${s.accuracy >= 70 ? 'text-[#00A651]' : 'text-[#EE3124]'}">${s.accuracy}%</span>
         </div>
         ${categoriesHtml}
       </div>`;
