@@ -783,6 +783,57 @@ const OTHER_QUESTIONS = [
   { id: 533, category: "Locations", topics: ["Locations"], q: "The Bowery is in:", choices: ["Upper Manhattan", "Midtown Manhattan", "Lower Manhattan", "Brooklyn"], correct: 2, explanation: "The Bowery is in Lower Manhattan." },
   { id: 534, category: "Locations", topics: ["Locations"], q: "Canal Street is in:", choices: ["Upper Manhattan", "Midtown Manhattan", "Lower Manhattan", "Brooklyn"], correct: 2, explanation: "Canal Street is in Lower Manhattan." },
   { id: 535, category: "Locations", topics: ["Locations"], q: "Houston Street is in:", choices: ["Upper Manhattan", "Midtown Manhattan", "Lower Manhattan", "Brooklyn"], correct: 2, explanation: "Houston Street is in Lower Manhattan." },
+  // Additional Time & Schedule questions (IDs 536-585)
+  { id: 536, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If a train departs at 0745 hours, this is:", choices: ["7:45 AM", "7:45 PM", "6:45 AM", "6:45 PM"], correct: 0, explanation: "0745 hours = 7:45 AM." },
+  { id: 537, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A train runs every 6 minutes during peak hours. How many trains run in 1 hour?", choices: ["8", "10", "12", "15"], correct: 1, explanation: "60 minutes ÷ 6 minutes = 10 trains." },
+  { id: 538, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If departure is at 1830 hours, this is:", choices: ["6:30 AM", "6:30 PM", "8:30 AM", "8:30 PM"], correct: 1, explanation: "1830 hours = 6:30 PM." },
+  { id: 539, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A trip takes 1 hour 20 minutes. This is:", choices: ["70 minutes", "80 minutes", "90 minutes", "100 minutes"], correct: 1, explanation: "1 hour 20 minutes = 80 minutes." },
+  { id: 540, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If a train is scheduled to depart at 2:15 PM and arrives at 3:50 PM, travel time is:", choices: ["1 hour 25 minutes", "1 hour 35 minutes", "1 hour 45 minutes", "2 hours"], correct: 1, explanation: "From 2:15 PM to 3:50 PM = 1 hour 35 minutes." },
+  { id: 541, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A schedule shows trains every 30 minutes. In 4 hours, how many trains depart?", choices: ["6", "7", "8", "9"], correct: 2, explanation: "4 hours × 2 trains/hour = 8 trains." },
+  { id: 542, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If a train departs at 2115 hours, this is:", choices: ["9:15 AM", "9:15 PM", "11:15 AM", "11:15 PM"], correct: 1, explanation: "2115 hours = 9:15 PM." },
+  { id: 543, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A journey takes 95 minutes. This is:", choices: ["1 hour 25 minutes", "1 hour 35 minutes", "1 hour 45 minutes", "2 hours"], correct: 1, explanation: "95 minutes = 1 hour 35 minutes." },
+  { id: 544, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If headway is 15 minutes, how many trains run in 90 minutes?", choices: ["4", "5", "6", "7"], correct: 2, explanation: "90 minutes ÷ 15 minutes = 6 trains." },
+  { id: 545, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A train departs at 1345 hours. This is:", choices: ["1:45 AM", "1:45 PM", "3:45 AM", "3:45 PM"], correct: 1, explanation: "1345 hours = 1:45 PM." },
+  { id: 546, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If a trip takes 2 hours 10 minutes, this is:", choices: ["120 minutes", "130 minutes", "140 minutes", "150 minutes"], correct: 1, explanation: "2 hours 10 minutes = 130 minutes." },
+  { id: 547, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A schedule shows departure at 11:30 PM. In 24-hour time, this is:", choices: ["2130", "2230", "2330", "2430"], correct: 2, explanation: "11:30 PM = 2330 in 24-hour time." },
+  { id: 548, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If trains run every 9 minutes, how many run in 1 hour?", choices: ["5", "6", "7", "8"], correct: 1, explanation: "60 minutes ÷ 9 minutes ≈ 6.67, so 6 complete trains." },
+  { id: 549, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A train departs at 0530 hours. This is:", choices: ["5:30 AM", "5:30 PM", "3:30 AM", "3:30 PM"], correct: 0, explanation: "0530 hours = 5:30 AM." },
+  { id: 550, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If a journey takes 110 minutes, this is:", choices: ["1 hour 40 minutes", "1 hour 50 minutes", "2 hours", "2 hours 10 minutes"], correct: 1, explanation: "110 minutes = 1 hour 50 minutes." },
+  { id: 551, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A schedule shows arrival at 1745 hours. This is:", choices: ["5:45 AM", "5:45 PM", "7:45 AM", "7:45 PM"], correct: 1, explanation: "1745 hours = 5:45 PM." },
+  { id: 552, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If headway is 7 minutes, approximately how many trains run in 1 hour?", choices: ["7", "8", "9", "10"], correct: 1, explanation: "60 minutes ÷ 7 minutes ≈ 8.57, so approximately 8 trains." },
+  { id: 553, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A train departs at 1920 hours. This is:", choices: ["7:20 AM", "7:20 PM", "9:20 AM", "9:20 PM"], correct: 1, explanation: "1920 hours = 7:20 PM." },
+  { id: 554, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If a trip takes 155 minutes, this is:", choices: ["2 hours 25 minutes", "2 hours 35 minutes", "2 hours 45 minutes", "3 hours"], correct: 1, explanation: "155 minutes = 2 hours 35 minutes." },
+  { id: 555, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A schedule shows departure at 0815 hours. This is:", choices: ["8:15 AM", "8:15 PM", "6:15 AM", "6:15 PM"], correct: 0, explanation: "0815 hours = 8:15 AM." },
+  { id: 556, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If trains run every 4 minutes during rush hour, how many run in 30 minutes?", choices: ["6", "7", "8", "9"], correct: 1, explanation: "30 minutes ÷ 4 minutes = 7.5, so 7 complete trains." },
+  { id: 557, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A journey takes 1 hour 55 minutes. This is:", choices: ["105 minutes", "115 minutes", "125 minutes", "135 minutes"], correct: 1, explanation: "1 hour 55 minutes = 115 minutes." },
+  { id: 558, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If a train departs at 2245 hours, this is:", choices: ["10:45 AM", "10:45 PM", "12:45 AM", "12:45 PM"], correct: 1, explanation: "2245 hours = 10:45 PM." },
+  { id: 559, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A schedule shows arrival at 1430 hours. This is:", choices: ["2:30 AM", "2:30 PM", "4:30 AM", "4:30 PM"], correct: 1, explanation: "1430 hours = 2:30 PM." },
+  { id: 560, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If headway is 11 minutes, how many trains run in 2 hours?", choices: ["10", "11", "12", "13"], correct: 1, explanation: "120 minutes ÷ 11 minutes ≈ 10.9, so 10 complete trains." },
+  { id: 561, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A train departs at 1650 hours. This is:", choices: ["4:50 AM", "4:50 PM", "6:50 AM", "6:50 PM"], correct: 1, explanation: "1650 hours = 4:50 PM." },
+  { id: 562, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If a trip takes 200 minutes, this is:", choices: ["3 hours 10 minutes", "3 hours 20 minutes", "3 hours 30 minutes", "3 hours 40 minutes"], correct: 1, explanation: "200 minutes = 3 hours 20 minutes." },
+  { id: 563, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A schedule shows departure at 0945 hours. This is:", choices: ["9:45 AM", "9:45 PM", "7:45 AM", "7:45 PM"], correct: 0, explanation: "0945 hours = 9:45 AM." },
+  { id: 564, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If trains run every 13 minutes, how many run in 90 minutes?", choices: ["6", "7", "8", "9"], correct: 0, explanation: "90 minutes ÷ 13 minutes ≈ 6.92, so 6 complete trains." },
+  { id: 565, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A journey takes 1 hour 15 minutes. This is:", choices: ["65 minutes", "75 minutes", "85 minutes", "95 minutes"], correct: 1, explanation: "1 hour 15 minutes = 75 minutes." },
+  { id: 566, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If a train departs at 2015 hours, this is:", choices: ["8:15 AM", "8:15 PM", "10:15 AM", "10:15 PM"], correct: 1, explanation: "2015 hours = 8:15 PM." },
+  { id: 567, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A schedule shows arrival at 1120 hours. This is:", choices: ["11:20 AM", "11:20 PM", "1:20 AM", "1:20 PM"], correct: 0, explanation: "1120 hours = 11:20 AM." },
+  { id: 568, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If headway is 14 minutes, how many trains run in 2 hours?", choices: ["8", "9", "10", "11"], correct: 0, explanation: "120 minutes ÷ 14 minutes ≈ 8.57, so 8 complete trains." },
+  { id: 569, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A train departs at 1515 hours. This is:", choices: ["3:15 AM", "3:15 PM", "5:15 AM", "5:15 PM"], correct: 1, explanation: "1515 hours = 3:15 PM." },
+  { id: 570, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If a trip takes 175 minutes, this is:", choices: ["2 hours 45 minutes", "2 hours 55 minutes", "3 hours", "3 hours 10 minutes"], correct: 1, explanation: "175 minutes = 2 hours 55 minutes." },
+  { id: 571, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A schedule shows departure at 0645 hours. This is:", choices: ["6:45 AM", "6:45 PM", "4:45 AM", "4:45 PM"], correct: 0, explanation: "0645 hours = 6:45 AM." },
+  { id: 572, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If trains run every 5 minutes, how many run in 45 minutes?", choices: ["8", "9", "10", "11"], correct: 1, explanation: "45 minutes ÷ 5 minutes = 9 trains." },
+  { id: 573, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A journey takes 2 hours 5 minutes. This is:", choices: ["115 minutes", "125 minutes", "135 minutes", "145 minutes"], correct: 1, explanation: "2 hours 5 minutes = 125 minutes." },
+  { id: 574, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If a train departs at 2330 hours, this is:", choices: ["11:30 AM", "11:30 PM", "1:30 AM", "1:30 PM"], correct: 1, explanation: "2330 hours = 11:30 PM." },
+  { id: 575, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A schedule shows arrival at 1310 hours. This is:", choices: ["1:10 AM", "1:10 PM", "3:10 AM", "3:10 PM"], correct: 1, explanation: "1310 hours = 1:10 PM." },
+  { id: 576, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If headway is 16 minutes, how many trains run in 2 hours?", choices: ["7", "8", "9", "10"], correct: 0, explanation: "120 minutes ÷ 16 minutes = 7.5, so 7 complete trains." },
+  { id: 577, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A train departs at 1745 hours. This is:", choices: ["5:45 AM", "5:45 PM", "7:45 AM", "7:45 PM"], correct: 1, explanation: "1745 hours = 5:45 PM." },
+  { id: 578, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If a trip takes 225 minutes, this is:", choices: ["3 hours 35 minutes", "3 hours 45 minutes", "4 hours", "4 hours 15 minutes"], correct: 1, explanation: "225 minutes = 3 hours 45 minutes." },
+  { id: 579, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A schedule shows departure at 1030 hours. This is:", choices: ["10:30 AM", "10:30 PM", "12:30 AM", "12:30 PM"], correct: 0, explanation: "1030 hours = 10:30 AM." },
+  { id: 580, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If trains run every 8 minutes, how many run in 1 hour?", choices: ["6", "7", "8", "9"], correct: 1, explanation: "60 minutes ÷ 8 minutes = 7.5, so 7 complete trains." },
+  { id: 581, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A journey takes 1 hour 40 minutes. This is:", choices: ["90 minutes", "100 minutes", "110 minutes", "120 minutes"], correct: 1, explanation: "1 hour 40 minutes = 100 minutes." },
+  { id: 582, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If a train departs at 1950 hours, this is:", choices: ["7:50 AM", "7:50 PM", "9:50 AM", "9:50 PM"], correct: 1, explanation: "1950 hours = 7:50 PM." },
+  { id: 583, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A schedule shows arrival at 1240 hours. This is:", choices: ["12:40 AM", "12:40 PM", "2:40 AM", "2:40 PM"], correct: 1, explanation: "1240 hours = 12:40 PM." },
+  { id: 584, category: "Time & Schedule", topics: ["Time & Schedule"], q: "If headway is 18 minutes, how many trains run in 3 hours?", choices: ["9", "10", "11", "12"], correct: 1, explanation: "180 minutes ÷ 18 minutes = 10 trains." },
+  { id: 585, category: "Time & Schedule", topics: ["Time & Schedule"], q: "A train departs at 1425 hours. This is:", choices: ["2:25 AM", "2:25 PM", "4:25 AM", "4:25 PM"], correct: 1, explanation: "1425 hours = 2:25 PM." },
 ];
 
 // Combine Official NYCTA Exam questions (1-101) with other questions (102+)
@@ -874,13 +925,11 @@ function renderHome() {
     } else {
       catQs = QUESTIONS.filter(q => q.category === cat.name);
     }
-    const attempted = catQs.filter(q => stats.categoryStats[cat.name]?.attempts > 0).length;
-    const correctCount = catQs.filter(q => {
-      const cs = stats.categoryStats[cat.name];
-      return cs && cs.correct > 0;
-    }).length;
+    const cs = stats.categoryStats[cat.name];
+    const attempted = cs ? cs.attempts : 0;
+    const correctCount = cs ? cs.correct : 0;
     const catAcc = attempted > 0 ? Math.round((correctCount / attempted) * 100) : 0;
-    const progress = attempted > 0 ? Math.round((attempted / catQs.length) * 100) : 0;
+    const progress = attempted > 0 ? Math.min(100, Math.round((attempted / catQs.length) * 100)) : 0;
     return `<div class="mta-card rounded-2xl p-5 cursor-pointer" onclick="startQuiz('${cat.name}', 0)">
       <div class="flex items-center justify-between mb-3"><span class="text-3xl">${cat.icon}</span><span class="text-xs bg-blue-50 text-[#0039A6] px-2 py-1 rounded-full font-semibold">${cat.count} Qs</span></div>
       <h4 class="font-bold text-gray-800 mb-1">${cat.name}</h4>
@@ -1315,7 +1364,10 @@ function finishQuiz() {
   const secs = elapsed % 60;
   const pct = Math.round((correct / total) * 100);
 
-  stats.sessions = [{ date: new Date().toLocaleDateString(), score: correct, total, accuracy: pct }, ...stats.sessions].slice(0, 10);
+  // Collect unique categories from the quiz
+  const categories = [...new Set(quizState.questions.map(q => q.category))];
+
+  stats.sessions = [{ date: new Date().toLocaleDateString(), score: correct, total, accuracy: pct, categories }, ...stats.sessions].slice(0, 10);
   saveStats();
 
   document.getElementById('results-icon').textContent = pct >= 70 ? '🎉' : pct >= 50 ? '👍' : '📚';
@@ -1673,7 +1725,21 @@ function renderStats() {
 
   const sessionsEl = document.getElementById('recent-sessions');
   if (stats.sessions.length === 0) { sessionsEl.innerHTML = '<p class="text-gray-500 text-sm">No sessions yet. Start a quiz to see your history.</p>'; }
-  else { sessionsEl.innerHTML = stats.sessions.map(s => `<div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"><span class="text-sm text-gray-600">${s.date}</span><span class="text-sm font-semibold text-[#0039A6]">${s.score}/${s.total}</span><span class="text-sm font-semibold ${s.accuracy >= 70 ? 'text-[#00A651]' : 'text-[#EE3124]'}">${s.accuracy}%</span></div>`).join(''); }
+  else { 
+    sessionsEl.innerHTML = stats.sessions.map(s => {
+      const categoriesHtml = s.categories && s.categories.length > 0 
+        ? `<div class="mt-1 flex flex-wrap gap-1">${s.categories.map(cat => `<span class="text-xs bg-blue-50 text-[#0039A6] px-2 py-0.5 rounded-full">${cat}</span>`).join('')}</div>`
+        : '';
+      return `<div class="py-2 border-b border-gray-100 last:border-0">
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-600">${s.date}</span>
+          <span class="text-sm font-semibold text-[#0039A6]">${s.score}/${s.total}</span>
+          <span class="text-sm font-semibold ${s.accuracy >= 70 ? 'text-[#00A651]' : 'text-[#EE3124]'">${s.accuracy}%</span>
+        </div>
+        ${categoriesHtml}
+      </div>`;
+    }).join(''); 
+  }
 }
 function resetStats() { if (confirm('Reset all progress?')) { stats = { totalAttempts: 0, correctAnswers: 0, currentStreak: 0, bestStreak: 0, categoryStats: {}, sessions: [] }; saveStats(); renderStats(); renderHome(); } }
 
