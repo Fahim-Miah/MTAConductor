@@ -925,13 +925,11 @@ function renderHome() {
     } else {
       catQs = QUESTIONS.filter(q => q.category === cat.name);
     }
-    const attempted = catQs.filter(q => stats.categoryStats[cat.name]?.attempts > 0).length;
-    const correctCount = catQs.filter(q => {
-      const cs = stats.categoryStats[cat.name];
-      return cs && cs.correct > 0;
-    }).length;
+    const cs = stats.categoryStats[cat.name];
+    const attempted = cs ? cs.attempts : 0;
+    const correctCount = cs ? cs.correct : 0;
     const catAcc = attempted > 0 ? Math.round((correctCount / attempted) * 100) : 0;
-    const progress = attempted > 0 ? Math.round((attempted / catQs.length) * 100) : 0;
+    const progress = attempted > 0 ? Math.min(100, Math.round((attempted / catQs.length) * 100)) : 0;
     return `<div class="mta-card rounded-2xl p-5 cursor-pointer" onclick="startQuiz('${cat.name}', 0)">
       <div class="flex items-center justify-between mb-3"><span class="text-3xl">${cat.icon}</span><span class="text-xs bg-blue-50 text-[#0039A6] px-2 py-1 rounded-full font-semibold">${cat.count} Qs</span></div>
       <h4 class="font-bold text-gray-800 mb-1">${cat.name}</h4>
@@ -1366,7 +1364,10 @@ function finishQuiz() {
   const secs = elapsed % 60;
   const pct = Math.round((correct / total) * 100);
 
-  stats.sessions = [{ date: new Date().toLocaleDateString(), score: correct, total, accuracy: pct }, ...stats.sessions].slice(0, 10);
+  // Collect unique categories from the quiz
+  const categories = [...new Set(quizState.questions.map(q => q.category))];
+
+  stats.sessions = [{ date: new Date().toLocaleDateString(), score: correct, total, accuracy: pct, categories }, ...stats.sessions].slice(0, 10);
   saveStats();
 
   document.getElementById('results-icon').textContent = pct >= 70 ? '🎉' : pct >= 50 ? '👍' : '📚';
@@ -1724,7 +1725,21 @@ function renderStats() {
 
   const sessionsEl = document.getElementById('recent-sessions');
   if (stats.sessions.length === 0) { sessionsEl.innerHTML = '<p class="text-gray-500 text-sm">No sessions yet. Start a quiz to see your history.</p>'; }
-  else { sessionsEl.innerHTML = stats.sessions.map(s => `<div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"><span class="text-sm text-gray-600">${s.date}</span><span class="text-sm font-semibold text-[#0039A6]">${s.score}/${s.total}</span><span class="text-sm font-semibold ${s.accuracy >= 70 ? 'text-[#00A651]' : 'text-[#EE3124]'}">${s.accuracy}%</span></div>`).join(''); }
+  else { 
+    sessionsEl.innerHTML = stats.sessions.map(s => {
+      const categoriesHtml = s.categories && s.categories.length > 0 
+        ? `<div class="mt-1 flex flex-wrap gap-1">${s.categories.map(cat => `<span class="text-xs bg-blue-50 text-[#0039A6] px-2 py-0.5 rounded-full">${cat}</span>`).join('')}</div>`
+        : '';
+      return `<div class="py-2 border-b border-gray-100 last:border-0">
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-600">${s.date}</span>
+          <span class="text-sm font-semibold text-[#0039A6]">${s.score}/${s.total}</span>
+          <span class="text-sm font-semibold ${s.accuracy >= 70 ? 'text-[#00A651]' : 'text-[#EE3124]'">${s.accuracy}%</span>
+        </div>
+        ${categoriesHtml}
+      </div>`;
+    }).join(''); 
+  }
 }
 function resetStats() { if (confirm('Reset all progress?')) { stats = { totalAttempts: 0, correctAnswers: 0, currentStreak: 0, bestStreak: 0, categoryStats: {}, sessions: [] }; saveStats(); renderStats(); renderHome(); } }
 
